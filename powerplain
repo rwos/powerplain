@@ -1,0 +1,162 @@
+#!/usr/bin/python
+"""
+    PowerPlain - a plain-text presentation program.
+
+    (please don't take this too seriously)
+
+    Copyright (c) 2012 by Richard Wossal <richard@r-wos.org>
+
+    Permission to use, copy, modify, and distribute this software and its
+    documentation for any purpose and without fee is hereby granted, provided
+    that the above copyright notice appear in all copies and that both that
+    copyright notice and this permission notice appear in supporting
+    documentation. This software is provided "as is" without express or
+    implied warranty.
+"""
+import sys, os
+from math import ceil, floor
+
+# maximum width of slides in characters
+W = 60
+# height of slides in lines
+H = 20
+# options for the headings (see "man figlet")
+FIGLET_FLAGS = "-f mini -c"
+
+def usage():
+    print "usage " + sys.argv[0] + " OPTION FILE"
+    print "with OPTION being one of"
+    print "\t-r\trender to stdout"
+    print "\t-c\tcheck for overflow"
+    print "\t-i\tinteractive presentation mode"
+
+def fatal(msg):
+    sys.stderr.write(sys.argv[0] + ": error: " + msg + "\n")
+
+def figlet_installed():
+    fp =  os.popen("echo -n | figlet")
+    test = fp.read()
+    ret = fp.close()
+    if ret is not None or len(test) > 0:
+        return False
+    return True
+
+def render(src):
+    def parse(src):
+        slides = []
+        lines = []
+        head, tl, tr, bl, br = None,"","","",""
+        for l in src.split("\n"):
+            if len(l) == 0:
+                continue
+            elif len(l) > 2 and l[:2] == "==":
+                if head is not None:
+                    slides.append({"head": head, "lines": lines,
+                                   "tl": tl, "tr": tr, "bl": bl, "br": br})
+                    lines = []
+                head = l.strip("= ")
+            elif len(l) > 4 and l[:2] == "::":
+                # that can't be the best way to do this...
+                v = l[4:].strip()
+                tl,tr,bl,br = {"tl":(v,tr,bl,br),
+                               "tr":(tl,v,bl,br),
+                               "bl":(tl,tr,v,br),
+                               "br":(tl,tr,bl,v)}.get(l[2:4])
+            else:
+                lines.append(l)
+        return slides
+    # rendering
+    global W, H, FIGLET_FLAGS
+    out = ""
+    head_height = 0
+    for slide in parse(src):
+        # header
+        spw = (W-1-len(slide["tl"])-len(slide["tr"]))
+        if spw > 0: sp = " " * spw
+        else:       sp = " "
+        out += slide["tl"] + sp + slide["tr"] + "\n"
+        out += "-" * (W-1) + "\n"
+        # heading
+        cmd = "echo -n '" + slide["head"] + \
+              "' | figlet " + FIGLET_FLAGS + " -w " + str(W)
+        head = os.popen(cmd).read().strip("\n")
+        head_height = len(head.split("\n"))
+        out += head
+        # content
+        content_h = H - 2 - head_height - 2
+        padding = content_h - len(slide["lines"]) + 1
+        out += ("\n" * int(floor(padding/2.0))) + \
+               "\n".join(slide["lines"]) + \
+               ("\n" * int(ceil(padding/2.0)))
+        # footer
+        out += "-" * (W-1) + "\n"
+        spw = (W-1-len(slide["bl"])-len(slide["br"]))
+        if spw > 0: sp = " " * spw
+        else:       sp = " "
+        out += slide["bl"] + sp + slide["br"] + "\n"
+        # slide seperator
+        out += "\v"
+    return out.strip("\v")
+
+def check(rendered):
+    global W, H
+    errors = []
+    i = 0
+    print "checking against"
+    print "\tmaximum width: " + str(W) + " characters"
+    print "\tslide height: " + str(H) + " lines"
+    for slide in rendered.split("\v"):
+        i += 1
+        lines = slide.split("\n")
+        if len(lines) != H:
+            errors.append("wrong number of lines (" + str(len(lines)) + \
+                          ") in slide " + str(i))
+        for line in lines:
+            if len(line) > W:
+                errors.append("line in slide " + str(i) + " is too long (" + \
+                              str(len(line)) + " chars):")
+                errors.append(">>>" + line + "<<<")
+    if len(errors) == 0:
+        print "presentation is ok"
+    else:
+        print "presentation has errors"
+        print "\n".join(errors)
+
+def present(rendered):
+    def pause():
+        sys.stdin.read(1)
+    # present presentation
+    global W, H
+    th, tw = os.popen('stty size', 'r').read().split()
+    th, tw = int(th), int(tw)
+    # margins
+    lm = int(floor((tw-W)/2.0))
+    tm = int(floor((th-H)/2.0))
+    bm = int(ceil((th-H)/2.0))
+    for slide in rendered.split("\v"):
+        sys.stdout.write(tm * "\n")
+        for line in slide.split("\n"):
+            sys.stdout.write(" " * lm + line + "\n")
+        sys.stdout.write(bm * "\n")
+        pause() # TODO: change to real control (going backwards, etc)
+
+if len(sys.argv) != 3 or len(sys.argv[1]) != 2 or sys.argv[1][0] != "-":
+    usage()
+elif not figlet_installed():
+    fatal("please install 'figlet' first")
+else:
+    try:
+        fp = open(sys.argv[2])
+        src = fp.read()
+        fp.close()
+    except:
+        fatal("could not read file '" + sys.argv[2] + "'")
+    if sys.argv[1][1] == "r":
+        print render(src)
+    elif sys.argv[1][1] == "c":
+        check(render(src))
+    elif sys.argv[1][1] == "i":
+        present(render(src))
+    else:
+        usage()
+

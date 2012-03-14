@@ -1,0 +1,40 @@
+PowerPlain - a plain-text presentation program.
+-----------------------------------------------
+
+What it is:
+
+    Probably the best presentation program ever done.
+    The output looks vastly superior to most other presentation
+    programs.
+
+    The source files are plain-text with just a little bit of
+    syntax for headings and headers/footers.
+
+    See example_presentation.pp for more.
+
+You'll need:
+
+    - Python
+    - figlet <http://figlet.org>
+    - a terminal with a big enough font
+
+Usage:
+
+    powerplain MODE FILE
+
+To try it out, do:
+
+    $ ./powerplain -i example_presentation.pp
+
+    This starts the interactive mode (switch slides by pressing return).
+
+The other modes are:
+
+    -r  dumps rendered slides to stdout, seperated by a vertical tab
+    -c  checks if the presentation overflows the boundaries
+        (default is 60x20)
+
+Author:
+
+    Richard Wossal <richard@r-wos.org>
+
