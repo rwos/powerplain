@@ -4,13 +4,14 @@ PowerPlain - a plain-text presentation program.
 What it is:
 
     Probably the best presentation program ever done.
-    The output looks vastly superior to most other presentation
+    The output looks vastly superior to that of most other presentation
     programs.
 
     The source files are plain-text with just a little bit of
     syntax for headings and headers/footers.
 
-    See example_presentation.pp for more.
+    input format: see example_presentation.pp
+    output format: see example_output, or use interactive mode
 
 You'll need:
 

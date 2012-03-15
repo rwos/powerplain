@@ -1,0 +1,77 @@
+Example Presentation                      richard@r-wos.org
+-----------------------------------------------------------
+                                         
+                   |_| _  _. _|o._  _  _ 
+                   | |(/_(_|(_||| |(_|_> 
+                                    _|   
+
+
+
+
+- headings introduce slides
+- every slide has exactly one heading
+
+
+
+
+
+-----------------------------------------------------------
+Richard Wossal                                   2012-03-12
+Something Different                       richard@r-wos.org
+-----------------------------------------------------------
+              _                               
+             |__  __|_ _ ._/|_| _  _. _| _ ._ 
+             |(_)(_)|_(/_|/ | |(/_(_|(_|(/_|  
+                                              
+
+- specified via "::" at line beginning plus:
+  - tl -> top left
+  - br -> bottom right
+  - ...
+- text until line ending
+- in effect for this and all following slides
+  - may be changed between slides
+  - to leave blank: just don't specify
+  - to delete: use a space character
+
+-----------------------------------------------------------
+Richard Wossal                                   2012-03-12
+                                     <--- left one is blank
+-----------------------------------------------------------
+                 _                         
+                |_._ _ .__|_   | o._  _  _ 
+                |_| | ||_)|_\/ |_|| |(/__> 
+                       |    /              
+
+
+- empty lines are ignored
+^-- this line will not end up in the presentation
+- to make persistant empty lines, type a space
+- like so:
+ 
+^-- that line above will stay in the presentation
+
+
+
+-----------------------------------------------------------
+Richard Wossal                                   2012-03-12
+Example Presentation                      richard@r-wos.org
+-----------------------------------------------------------
+                      _               
+                     / \  _|_._   _|_ 
+                     \_/|_||_|_)|_||_ 
+                             |        
+
+
+
+- in render (-r) mode, slides are seperated by vertical
+  tabs (\v)
+ 
+- in interactive mode, slides get centered in the terminal
+
+
+
+
+-----------------------------------------------------------
+Richard Wossal                                   2012-03-12
+
