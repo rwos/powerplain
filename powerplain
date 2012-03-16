@@ -64,6 +64,8 @@ def render(src):
                                "br":(tl,tr,bl,v)}.get(l[2:4])
             else:
                 lines.append(l)
+        slides.append({"head": head, "lines": lines,
+                       "tl": tl, "tr": tr, "bl": bl, "br": br})
         return slides
     # rendering
     global W, H, FIGLET_FLAGS
