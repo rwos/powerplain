@@ -4,14 +4,13 @@
 
     (please don't take this too seriously)
 
-    Copyright (c) 2012 by Richard Wossal <richard@r-wos.org>
+    Written in 2012 by Richard Wossal <richard@r-wos.org>
 
-    Permission to use, copy, modify, and distribute this software and its
-    documentation for any purpose and without fee is hereby granted, provided
-    that the above copyright notice appear in all copies and that both that
-    copyright notice and this permission notice appear in supporting
-    documentation. This software is provided "as is" without express or
-    implied warranty.
+    To the extent possible under law, the author has dedicated all copyright
+    and related and neighboring rights to this software to the public domain
+    worldwide. This software is distributed without any warranty.
+
+    See the file called COPYING for details.
 """
 import sys, os
 from math import ceil, floor
